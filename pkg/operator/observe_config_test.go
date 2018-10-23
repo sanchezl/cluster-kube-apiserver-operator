@@ -24,9 +24,9 @@ func TestObserveClusterConfig(t *testing.T) {
 			"install-config": "networking:\n  podCIDR: " + podCIDR + "\n  serviceCIDR: " + serviceCIDR + "\n",
 		},
 	})
-	result, err := observeClusterConfig(kubeClient, &rest.Config{}, map[string]interface{}{})
-	if err != nil {
-		t.Error("expected err == nil")
+	result, errors := observeClusterConfig(kubeClient, &rest.Config{}, map[string]interface{}{})
+	if len(errors) > 0 {
+		t.Error("expected len(errors) == 0")
 	}
 	restrictedCIDRs, _, err := unstructured.NestedSlice(result, "admissionPluginConfig", "openshift.io/RestrictedEndpointsAdmission", "configuration", "restrictedCIDRs")
 	if err != nil {
